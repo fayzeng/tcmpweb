@@ -1,0 +1,103 @@
+export default {
+    data(){
+      return {
+        modaltitle:'',
+        modalflag:false,
+        loading:false,
+        FormItem:{
+          business_type:'',
+          model_code:'',
+          service_code:'',//服务类标识
+          template_code:'',//菜单代码
+          template_id:'',
+          default_flag:'1',//是否默认
+          inuse:'1',//是否启用
+          remark:'',
+          template_name:''
+        },
+        defaultList:[
+          {
+            key:true,
+            value:'是'
+          },
+          {
+            key:false,
+            value:'否'
+          }
+        ],
+        inuseList:[
+          {
+            key:true,
+            value:'是'
+          },
+          {
+            key:false,
+            value:'否'
+          }
+        ],
+        businessTypeList:[
+          {
+            key:'1',
+            value:'业务类型1'
+          }
+        ],
+        modelCodeList:[
+          {
+            key:'1',
+            value:'模板代码1'
+          }
+        ],
+        serviceCodeList:[
+          {
+            key:'1',
+            value:'服务类标识1'
+          }
+        ],
+        templateCodeList:[
+          {
+            key:'1',
+            value:'菜单代码1'
+          }
+        ]
+      }
+    },
+    methods:{
+        openmodel(title){
+            this.modaltitle=title
+            this.FormItem = {
+              business_type:'',
+              model_code:'',
+              service_code:'',//服务类标识
+              template_code:'',//菜单代码
+              template_id:'',
+              default_flag:'1',//是否默认
+              inuse:'1',//是否启用
+              remark:'',
+              template_name:''
+            }
+            this.modalflag = true
+            if(title=='修改模板'){
+                this.$get(this.GLOBAL.API_GET_TEMP_INFO,{template_id:this.$store.state.tableselect.selectdata[0].template_id}).then(res=>{
+                  if(res.data.success){
+                    this.FormItem = res.data.data
+                  }
+              })
+            }
+        },
+        savetemplate(){
+          this.loading=true;
+            this.$post(this.GLOBAL.API_ADD_TEMPLATE,this.FormItem).then(res=>{
+              this.loading=false;
+                if(res.data.success){
+                    this.$Message.success('保存成功')
+                    this.modalflag = false
+                    this.$emit('changpage')
+                }
+            }).catch(()=>{ this.loading=false }) 
+        }
+    },
+    created(){
+
+    }
+  }
+  
